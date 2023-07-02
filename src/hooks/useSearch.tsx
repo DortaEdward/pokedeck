@@ -1,0 +1,3 @@
+function useSearch(){
+  return;
+}
