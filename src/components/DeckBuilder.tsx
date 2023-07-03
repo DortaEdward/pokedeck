@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useQuery } from "react-query";
 import { useState } from "react";
 import { MdSort, MdOutlineSettings, MdSearch } from "react-icons/md";
@@ -11,6 +12,7 @@ import useDeck from "../hooks/useDeck";
 function DeckBuilder() {
   const [input, setInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [name, setName] = useState("First Deck");
   const { isLoading, data } = useQuery(["searchCards", searchTerm], () =>
     searchCards(searchTerm)
   );
@@ -45,6 +47,16 @@ function DeckBuilder() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (input.length > 0) setSearchTerm(input);
+  }
+
+  function createDeck() {
+    if (deck.length < 0 || deck.length > 60) return;
+    if (name.length <= 0 && !deck) return;
+    // @ts-ignore
+    window.bridge.saveData({
+      name,
+      deck: deck,
+    });
   }
 
   return (
@@ -91,7 +103,7 @@ function DeckBuilder() {
           <p>new deck</p>
           <p>rename deck</p>
           <p>delete deck</p>
-          <p>save deck</p>
+          <p onClick={createDeck}>save deck</p>
           <p>exit</p>
         </div>
 

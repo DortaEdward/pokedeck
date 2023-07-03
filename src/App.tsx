@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setStartUp(true)
-    }, 4000)
+    }, 4000);
   }, [])
 
   if (!startUp) return <StartUp />

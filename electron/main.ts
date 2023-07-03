@@ -1,5 +1,6 @@
-import { app, BrowserWindow, globalShortcut } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron'
 import path from 'node:path'
+import * as fs from 'fs';
 
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
@@ -15,6 +16,8 @@ function createWindow() {
     height: 750,
     resizable: false,
     webPreferences: {
+      contextIsolation:true,
+      nodeIntegration:true,
       preload: path.join(__dirname, 'preload.js'),
     },
   })
@@ -36,6 +39,26 @@ function createWindow() {
 app.on('window-all-closed', () => {
   win = null
 })
+
+ipcMain.on("saveData", (sender: any, data: any) => {
+  const fPath = path.join(__dirname,'../electron/decks.json')
+  console.log(fPath)
+  const file = fs.existsSync(fPath);
+  if(!file) {
+    console.log('No File, Creating it now'); 
+    console.log(JSON.stringify(data))
+    fs.writeFile(path.join(fPath),JSON.stringify(data),(err: any) => {
+      if(err){
+        console.log(`ERROR: ${err}`);
+      }
+      return;
+    });
+    console.log('File Created')
+  }
+
+  return;
+})
+
 
 app.on('browser-window-focus', function () {
   globalShortcut.register("CommandOrControl+R", () => {
