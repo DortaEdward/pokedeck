@@ -20,5 +20,7 @@ export type CardType = {
   image: string | undefined,
   rules: string[] | undefined,
   resistances: string[] | undefined,
-  abilities:string[] | undefined
+  abilities: string[] | undefined
 }
+
+export type Deck = CardType[];
