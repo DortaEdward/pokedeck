@@ -5,7 +5,7 @@ import { BiBug } from "react-icons/bi";
 import { getCards, searchCards } from "../utils/apiCalls";
 // import { deck } from '../utils/data';
 import Card from "./Card";
-import type { CardType, Deck } from "../types/card";
+import type { CardType } from "../types/card";
 import FilterMenu from "./Filter";
 import useDeck from "../hooks/useDeck";
 
@@ -18,7 +18,10 @@ function DeckBuilder() {
 
   const [open, setOpen] = useState<boolean>(false);
   const [activeCard, setActiveCard] = useState<CardType | undefined>();
-  const { deck, addToDeck, removeCard } = useDeck({ deckSize: 60, maxCardDuplicates: 4 });
+  const { deck, addToDeck, removeCard, clearDeck } = useDeck({
+    deckSize: 60,
+    maxCardDuplicates: 4,
+  });
 
   function handleAddToDeck(card: CardType) {
     const formatedCard = {
@@ -84,7 +87,7 @@ function DeckBuilder() {
           <select name="decks">
             <option value="">Select Deck</option>
           </select>
-          <p>clear deck</p>
+          <p onClick={clearDeck}>clear deck</p>
           <p>set as default</p>
           <p>new deck</p>
           <p>rename deck</p>

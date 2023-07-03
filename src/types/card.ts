@@ -23,4 +23,4 @@ export type CardType = {
   abilities: string[] | undefined
 }
 
-export type Deck = CardType[];
+export type DeckType = CardType[];
