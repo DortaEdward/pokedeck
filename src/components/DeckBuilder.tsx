@@ -1,9 +1,8 @@
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { useState } from "react";
 import { MdSort, MdOutlineSettings, MdSearch } from "react-icons/md";
 import { BiBug } from "react-icons/bi";
-import { getCards, searchCards } from "../utils/apiCalls";
-// import { deck } from '../utils/data';
+import { searchCards } from "../utils/apiCalls";
 import Card from "./Card";
 import type { CardType } from "../types/card";
 import FilterMenu from "./Filter";
@@ -43,14 +42,14 @@ function DeckBuilder() {
     addToDeck(formatedCard);
   }
 
-  function handleSubmit(e: any) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (input.length > 0) setSearchTerm(input);
   }
 
   return (
     <div className="h-screen bg-slate-800 flex relative">
-      {open ? <FilterMenu /> : <></>}
+      {open ? <FilterMenu setOpen={setOpen} /> : <></>}
       <div className="w-1/6 bg-slate-">
         <div className="h-[94%] pt-4 px-2">
           {activeCard && (
@@ -73,9 +72,9 @@ function DeckBuilder() {
           )}
         </div>
         <div className="bg-slate-700 h-[6%] flex items-center justify-center gap-3">
-          <p className="text-sm flex gap-1 items-center text-red-500">
+          <div className="text-sm flex gap-1 items-center text-red-500 cursor-pointer">
             Report Bug <BiBug size={20} />
-          </p>
+          </div>
           <p className="text-sm flex gap-1 items-center">
             Settings <MdOutlineSettings size={20} />
           </p>
@@ -122,12 +121,15 @@ function DeckBuilder() {
             type="text"
             placeholder="Search Name"
             className="w-11/12 rounded px-2 py-1 outline-none"
-            onChange={(e: any) => setInput(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setInput(e.target.value)
+            }
           />
           <div className="flex gap-2">
             <button
               type="button"
               className="bg-teal-800 hover:bg-teal-950 py-1 px-3 rounded flex gap-1 items-center"
+              onClick={() => setOpen(true)}
             >
               Filters <MdSort size={20} />
             </button>
