@@ -31,7 +31,11 @@ const saveData = (data: any) => {
   return;
 }
 
-contextBridge.exposeInMainWorld('bridge', { saveData })
+const getDecks = () => {
+  return ipcRenderer.send("getDecks");
+}
+
+contextBridge.exposeInMainWorld('bridge', { saveData, getDecks })
 
 
 // ----------------------------------------------------------------------

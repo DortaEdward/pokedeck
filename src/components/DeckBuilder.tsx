@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useQuery } from "react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdSort, MdOutlineSettings, MdSearch } from "react-icons/md";
 import { BiBug } from "react-icons/bi";
 import { searchCards } from "../utils/apiCalls";
@@ -13,6 +13,7 @@ function DeckBuilder() {
   const [input, setInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [name, setName] = useState("First Deck");
+  const [decks, setDecks] = useState(null);
   const { isLoading, data } = useQuery(["searchCards", searchTerm], () =>
     searchCards(searchTerm)
   );
@@ -23,6 +24,16 @@ function DeckBuilder() {
     deckSize: 60,
     maxCardDuplicates: 4,
   });
+
+  useEffect(() => {
+    (async () => {
+      // @ts-ignore
+      const resDecks = await window.bridge.getDecks();
+      console.log("Decks?:", resDecks);
+      console.log("Got Decks?");
+      setDecks(resDecks);
+    })();
+  }, []);
 
   function handleAddToDeck(card: CardType) {
     const formatedCard = {
@@ -122,6 +133,7 @@ function DeckBuilder() {
                 />
               );
             })}
+          {decks ? <>{JSON.stringify(decks)}</> : <>no Decks</>}
         </div>
       </div>
       <div className="w-1/6 p-1 bg-slate-800 overflow-auto h-full relative">

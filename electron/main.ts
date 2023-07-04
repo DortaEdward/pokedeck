@@ -16,12 +16,12 @@ function createWindow() {
     height: 750,
     resizable: false,
     webPreferences: {
-      contextIsolation:true,
-      nodeIntegration:true,
+      contextIsolation: true,
+      nodeIntegration: true,
       preload: path.join(__dirname, 'preload.js'),
     },
   })
-  // win.setMenuBarVisibility(false)
+  win.setMenuBarVisibility(false)
 
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
@@ -41,22 +41,37 @@ app.on('window-all-closed', () => {
 })
 
 ipcMain.on("saveData", (sender: any, data: any) => {
-  const fPath = path.join(__dirname,'../electron/decks.json')
+  const fPath = path.join(__dirname, '../electron/decks.json')
   console.log(fPath)
   const file = fs.existsSync(fPath);
-  if(!file) {
-    console.log('No File, Creating it now'); 
-    console.log(JSON.stringify(data))
-    fs.writeFile(path.join(fPath),JSON.stringify(data),(err: any) => {
-      if(err){
+  if (!file) {
+    fs.writeFile(path.join(fPath), JSON.stringify(data),(err: any) => {
+      if (err) {
         console.log(`ERROR: ${err}`);
       }
       return;
     });
-    console.log('File Created')
   }
 
+  fs.appendFile(fPath, JSON.stringify(data), (err: any) => {
+    if (err) {
+      console.log(`ERROR: ${err}`);
+    }
+  })
   return;
+})
+
+ipcMain.on('getDecks', async (sender: any) => {
+  console.log('Getting Decks')
+  const fPath = path.join(__dirname, '../electron/decks.json')
+  const f = fs.readFileSync(fPath,'utf-8');
+  console.log(JSON.parse(f));
+  if (!f) {
+    console.log(`Error reading file`);
+    return
+  }
+  return f;
+
 })
 
 
