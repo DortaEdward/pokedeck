@@ -21,7 +21,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
   })
-  win.setMenuBarVisibility(false)
+  // win.setMenuBarVisibility(false)
 
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
@@ -64,14 +64,14 @@ ipcMain.on("saveData", (sender: any, data: any) => {
 ipcMain.on('getDecks', async (sender: any) => {
   console.log('Getting Decks')
   const fPath = path.join(__dirname, '../electron/decks.json')
-  const f = fs.readFileSync(fPath,'utf-8');
-  console.log(JSON.parse(f));
-  if (!f) {
-    console.log(`Error reading file`);
-    return
-  }
-  return f;
-
+  const f:any = fs.readFile(fPath,'utf-8',(err) => {
+    if(err) console.log(`ERROR: Error reading json file, ${err}`)
+    if (!f) {
+      console.log(`Error reading file`);
+      return
+    }
+    return JSON.parse(f);
+  });
 })
 
 

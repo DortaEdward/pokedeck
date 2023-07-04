@@ -36,9 +36,9 @@ const PokemonDisplay = ({ abilities, hp, types, attacks, weaknesses, resistances
 
         {
           abilities &&
-          abilities.map((ability: any) => {
+          abilities.map((ability: { name: string, text: string }, idx: number) => {
             return (
-              <div className=" border-y-2 py-1">
+              <div className=" border-y-2 py-1" key={`${abilities.name}-${idx}`}>
                 <p className="text-red-800">{ability.name}</p>
                 <p className="text-sm">{ability.text}</p>
               </div>
@@ -49,9 +49,9 @@ const PokemonDisplay = ({ abilities, hp, types, attacks, weaknesses, resistances
 
       {
         attacks &&
-        attacks.map((attack: any) => {
+        attacks.map((attack: { name: string, damage: string, cost: [string], text: string }, idx: number) => {
           return (
-            <div>
+            <div key={`${attack.name}-${idx}`}>
               <div className="flex flex-col gap-1 text-sm">
                 <div className="flex gap-2">
                   <p>
@@ -62,7 +62,7 @@ const PokemonDisplay = ({ abilities, hp, types, attacks, weaknesses, resistances
                   </p>
                 </div>
                 <p className="flex gap-[0.15rem]">
-                  {attack.cost.map((cost: any) => { return (<img className="w-[12px] h-[12px]" src={`${cost}.png`} />) })}
+                  {attack.cost.map((cost, idx) => { return (<img key={`${cost}-${idx}`} className="w-[12px] h-[12px]" src={`${cost}.png`} />) })}
                 </p>
               </div>
               <p className="text-sm">{attack.text}</p>
@@ -74,9 +74,9 @@ const PokemonDisplay = ({ abilities, hp, types, attacks, weaknesses, resistances
         <div>
           <p className="text-sm">Weakness</p>
           {
-            weaknesses && weaknesses.map((weakness: any) => {
+            weaknesses && weaknesses.map((weakness: {type:string, value:string}, idx:number) => {
               return (
-                <div className="flex gap-1 items-center"><img className="w-[12px] h-[12px]" src={`${weakness.type}.png`} /> <p className="text-sm">{weakness.value}</p></div>
+                <div key={`${weakness}-${idx}`} className="flex gap-1 items-center"><img className="w-[12px] h-[12px]" src={`${weakness.type}.png`} /> <p className="text-sm">{weakness.value}</p></div>
               )
             })
           }
@@ -85,9 +85,9 @@ const PokemonDisplay = ({ abilities, hp, types, attacks, weaknesses, resistances
           <p className="text-sm">Resistance</p>
           <div>
             {
-              resistances && resistances.map((resistance: any) => {
+              resistances && resistances.map((resistance: {type:string,value:string}, idx:number) => {
                 return (
-                  <div className="flex gap-1 items-center">
+                  <div className="flex gap-1 items-center" key={`${resistance.type}-${idx}`}>
                     <img className="w-[12px] h-[12px]" src={`${resistance.type}.png`} />
                     <p className="text-sm">{resistance.value}</p>
                   </div>
@@ -100,9 +100,9 @@ const PokemonDisplay = ({ abilities, hp, types, attacks, weaknesses, resistances
       <div className="flex items-center gap-2">
         <p className="text-sm">Retreat Cost</p>
         {
-          retreatCost && retreatCost.map((retreat: any) => {
+          retreatCost && retreatCost.map((retreat: string,idx:number) => {
             return (
-              <div className="flex gap-1 items-center">
+              <div className="flex gap-1 items-center" key={`${retreat}-${idx}`}>
                 <img className="w-[12px] h-[12px]" src={`${retreat}.png`} />
               </div>
             )
@@ -118,9 +118,9 @@ const TrainerDisplay = ({ rules }: any) => {
     <div className="flex flex-col gap-1">
       {
         rules &&
-        rules.map((rule: string) => {
+        rules.map((rule: string,idx:number) => {
           return (
-            <p className="text-sm">{rule}</p>
+            <p className="text-sm" key={`${rule}-${idx}`}>{rule}</p>
           )
         })
       }

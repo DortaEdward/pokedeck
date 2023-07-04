@@ -123,17 +123,16 @@ function DeckBuilder() {
           className="h-[90%] bg-red-400 grid grid-cols-10 grid-rows-6 place-content-center w-full gap-1"
         >
           {deck.length > 0 &&
-            deck.map((card) => {
+            deck.map((card,i) => {
               return (
                 <img
                   src={card.image}
                   className="w-[80px] h-[106px] bg-neutral-700"
-                  key={card.id}
+                  key={`${card.id}-${i}`}
                   onClick={() => removeCard(card)}
                 />
               );
             })}
-          {decks ? <>{JSON.stringify(decks)}</> : <>no Decks</>}
         </div>
       </div>
       <div className="w-1/6 p-1 bg-slate-800 overflow-auto h-full relative">
@@ -171,13 +170,13 @@ function DeckBuilder() {
           <>
             {data.data ? (
               <div className="grid grid-cols-3 grid-flow-row h-[88%] overflow-auto scrollbar-hide py-1">
-                {data.data.map((card: any) => {
+                {data.data.map((card: any, i:number) => {
                   return (
                     <div
                       onClick={() =>
                         handleAddToDeck({ ...card, image: card.images.large })
                       }
-                      key={card.id}
+                      key={`${card.id}-${i}-${i}`}
                       onMouseEnter={() =>
                         setActiveCard({
                           id: card.id,

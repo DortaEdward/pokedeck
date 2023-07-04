@@ -20,9 +20,11 @@ function useDeck({
 
   function addToDeck(card: CardType) {
     if (deck.length >= deckSize) return;
-    const cardCount = deck.filter((c: CardType) => c.id === card.id).length;
-    if (cardCount >= maxCardDuplicates) return;
 
+    const cardCount = deck.filter((c: CardType) => c.id === card.id).length;
+    const isEnergy = card.supertype === "Energy";
+    
+    if (cardCount >= maxCardDuplicates && !isEnergy) return;
     setDeck((prev) => [...prev, card]);
   }
 
@@ -40,15 +42,3 @@ function useDeck({
 }
 
 export default useDeck;
-
-/*
-  - [x] add cards to deck
-    - [x] if multiple of 4 dont add more
-    - [x] max deck size 60
-  - 
-  - [] save deck
-  - [] sort deck
-      - pokemon -> trainer -> energy
-
-  - [x] remove from deck
-*/

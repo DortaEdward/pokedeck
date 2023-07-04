@@ -10,8 +10,7 @@ type Input = {
 }
 
 export async function searchCards(input:string) {
-  const url = `https://api.pokemontcg.io/v2/cards?q=name:"${input}"`
-  console.log(url)
+  const url = `https://api.pokemontcg.io/v2/cards?q=name:"${input.length > 0 ? input:'pikachu'}"`
   const res = await fetch(url);
   const json = await res.json();
   return json;
