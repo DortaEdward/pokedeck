@@ -1,21 +1,32 @@
-import { useEffect, useState } from 'react'
-import StartUp from './components/StartUp.tsx';
-import DeckBuilder from './components/DeckBuilder.tsx';
+import { useEffect, useState } from "react";
+import StartUp from "./components/StartUp.tsx";
+import DeckBuilder from "./components/DeckBuilder.tsx";
+import { useQuery } from "react-query";
+import { searchCards } from "./utils/apiCalls";
 
 function App() {
-  const [startUp, setStartUp] = useState<boolean>(false);
+  const [startUp, setStartUp] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const { isLoading, data } = useQuery(["searchCards", searchTerm], () =>
+    searchCards(searchTerm)
+  );
 
   useEffect(() => {
-    setTimeout(() => {
-      setStartUp(true)
-    }, 4000);
-  }, [])
+    if (startUp) {
+      setStartUp((prev) => !prev);
+    }
+  }, [isLoading, startUp]);
 
-  if (!startUp) return <StartUp />
+  if (isLoading && startUp) return <StartUp />;
 
   return (
-    <DeckBuilder />
-  )
+    <DeckBuilder
+      isLoading={isLoading}
+      data={data}
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+    />
+  );
 }
 
 export default App;

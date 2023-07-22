@@ -5,3 +5,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@keyframes frames{
+  0% {
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+
+.loader{
+  animation: frames .8s  linear 0s infinite;
+}
