@@ -40,20 +40,40 @@ app.on('window-all-closed', () => {
   win = null
 })
 
-ipcMain.on("saveData", (sender: any, data: any) => {
+ipcMain.on("saveData", (sender: any, createDeck: any) => {
   const fPath = path.join(__dirname, '../electron/decks.json')
-  console.log(fPath)
-  const file = fs.existsSync(fPath);
-  if (!file) {
-    fs.writeFile(path.join(fPath), JSON.stringify(data),(err: any) => {
+  const isFile = fs.existsSync(fPath);
+  if (!isFile) {
+    fs.writeFile(path.join(fPath), JSON.stringify(createDeck),(err: any) => {
       if (err) {
         console.log(`ERROR: ${err}`);
       }
       return;
     });
   }
+  
+  fs.readFile(fPath, 'utf-8', (err, data) => {
+    if (err) {
+      console.error('Error reading deck.json:', err);
+      return;
+    }
+    try {
+      const deckData = JSON.parse(data);
 
-  fs.appendFile(fPath, JSON.stringify(data), (err: any) => {
+      deckData.push(createDeck);
+      fs.writeFile(path.join(fPath), JSON.stringify(deckData),(err: any) => {
+        if (err) {
+          console.log(`ERROR: ${err}`);
+        }
+        return;
+      });
+      // Use the deck data as needed
+    } catch (parseError) {
+      console.error('Error parsing deck.json:', parseError);
+    }
+  });
+
+  fs.appendFile(fPath, JSON.stringify(createDeck), (err: any) => {
     if (err) {
       console.log(`ERROR: ${err}`);
     }
@@ -62,15 +82,23 @@ ipcMain.on("saveData", (sender: any, data: any) => {
 })
 
 ipcMain.on('getDecks', async (sender: any) => {
-  console.log('Getting Decks')
-  const fPath = path.join(__dirname, '../electron/decks.json')
-  const f:any = fs.readFile(fPath,'utf-8',(err) => {
-    if(err) console.log(`ERROR: Error reading json file, ${err}`)
-    if (!f) {
-      console.log(`Error reading file`);
-      return
+  const deckFilePath = path.join(__dirname, '../electron/decks.json');
+
+  fs.readFile(deckFilePath, 'utf-8', (err, data) => {
+    if (err) {
+      console.error('Error reading deck.json:', err);
+      return;
     }
-    return JSON.parse(f);
+
+    // Parse the JSON data
+    try {
+      const deckData = JSON.parse(data);
+      console.log('Deck data:', deckData);
+      return deckData;
+      // Use the deck data as needed
+    } catch (parseError) {
+      console.error('Error parsing deck.json:', parseError);
+    }
   });
 })
 

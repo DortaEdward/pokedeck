@@ -13,7 +13,7 @@ import Search from "./Search";
 
 function DeckBuilder({ isLoading, data, searchTerm, setSearchTerm }: any) {
   const [input, setInput] = useState("");
-  const [name, setName] = useState("First Deck");
+  const [name, setName] = useState("Newest Deck");
   const [decks, setDecks] = useState(null);
   const [startUp, setStartUp] = useState<boolean>(false);
 
@@ -26,11 +26,13 @@ function DeckBuilder({ isLoading, data, searchTerm, setSearchTerm }: any) {
 
   useEffect(() => {
     (async () => {
-      // @ts-ignore
-      const resDecks = await window.bridge.getDecks();
-      console.log("Decks?:", resDecks);
-      console.log("Got Decks?");
-      setDecks(resDecks);
+      try {
+        // @ts-ignore
+        const resDecks = await window.bridge.getDecks();
+        setDecks(resDecks);
+      } catch (err) {
+        console.log(`ERROR Getting Decks: ${err} `);
+      }
     })();
   }, []);
 
@@ -75,7 +77,7 @@ function DeckBuilder({ isLoading, data, searchTerm, setSearchTerm }: any) {
       <DisplayCard activeCard={activeCard} />
       <Deck
         clearDeck={clearDeck}
-        addToDeck={createDeck}
+        createDeck={createDeck}
         deck={deck}
         removeCard={removeCard}
       />
