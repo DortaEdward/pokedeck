@@ -44,14 +44,14 @@ ipcMain.on("saveData", (sender: any, createDeck: any) => {
   const fPath = path.join(__dirname, '../electron/decks.json')
   const isFile = fs.existsSync(fPath);
   if (!isFile) {
-    fs.writeFile(path.join(fPath), JSON.stringify(createDeck),(err: any) => {
+    fs.writeFile(path.join(fPath), JSON.stringify(createDeck), (err: any) => {
       if (err) {
         console.log(`ERROR: ${err}`);
       }
       return;
     });
   }
-  
+
   fs.readFile(fPath, 'utf-8', (err, data) => {
     if (err) {
       console.error('Error reading deck.json:', err);
@@ -61,7 +61,7 @@ ipcMain.on("saveData", (sender: any, createDeck: any) => {
       const deckData = JSON.parse(data);
 
       deckData.push(createDeck);
-      fs.writeFile(path.join(fPath), JSON.stringify(deckData),(err: any) => {
+      fs.writeFile(path.join(fPath), JSON.stringify(deckData), (err: any) => {
         if (err) {
           console.log(`ERROR: ${err}`);
         }
@@ -81,26 +81,31 @@ ipcMain.on("saveData", (sender: any, createDeck: any) => {
   return;
 })
 
-ipcMain.on('getDecks', async (sender: any) => {
-  const deckFilePath = path.join(__dirname, '../electron/decks.json');
+ipcMain.on('getDecks', async (event, ) => {
+  try {
+    const deckFilePath = path.join(__dirname, '../electron/decks.json');
+    const fileData = await fs.readFileSync(deckFilePath, 'utf-8');
+    event.reply('file-data', fileData);
+  } catch (error: any) {
+    event.reply('file-read-error', error.message);
+  }
+});
 
-  fs.readFile(deckFilePath, 'utf-8', (err, data) => {
-    if (err) {
-      console.error('Error reading deck.json:', err);
-      return;
-    }
-
-    // Parse the JSON data
-    try {
-      const deckData = JSON.parse(data);
-      console.log('Deck data:', deckData);
-      return deckData;
-      // Use the deck data as needed
-    } catch (parseError) {
-      console.error('Error parsing deck.json:', parseError);
-    }
-  });
-})
+// ipcMain.on('getDecks', async () => {
+//   const deckFilePath = path.join(__dirname, '../electron/decks.json');
+//   let deckData;
+//   fs.readFile(deckFilePath, 'utf-8', (err, data) => {
+//     if (err) {
+//       return console.error('Error reading deck.json:', err);
+//     }
+//     try {
+//       deckData = JSON.parse(data);
+//     } catch (parseError) {
+//       return console.error('Error parsing deck.json:', parseError);
+//     }
+//     return deckData;
+//   });
+// })
 
 
 app.on('browser-window-focus', function () {

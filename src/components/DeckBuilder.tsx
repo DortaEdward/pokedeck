@@ -14,7 +14,6 @@ import Search from "./Search";
 function DeckBuilder({ isLoading, data, searchTerm, setSearchTerm }: any) {
   const [input, setInput] = useState("");
   const [name, setName] = useState("Newest Deck");
-  const [decks, setDecks] = useState(null);
   const [startUp, setStartUp] = useState<boolean>(false);
 
   const [open, setOpen] = useState<boolean>(false);
@@ -24,17 +23,6 @@ function DeckBuilder({ isLoading, data, searchTerm, setSearchTerm }: any) {
     maxCardDuplicates: 4,
   });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        // @ts-ignore
-        const resDecks = await window.bridge.getDecks();
-        setDecks(resDecks);
-      } catch (err) {
-        console.log(`ERROR Getting Decks: ${err} `);
-      }
-    })();
-  }, []);
 
   function handleAddToDeck(card: CardType) {
     const formatedCard = {
